@@ -1,16 +1,34 @@
-import { LogisticaMoto, LogisticaCarro, LogisticaBicicleta } from "./entrega";
+import { LogisticaMoto, LogisticaCarro } from "./entrega";
 import { RegistroPedidos } from "./RegistroPedidos";
+import { PizzariaFactory, JaponesFactory, RestauranteFactory } from "./restaurante";
+import { PedidoBuilder } from "./pedido";
 
 const registro = RegistroPedidos.getInstancia();
 
-const moto = new LogisticaMoto();
-registro.registrar("Pizza R$80 - frete moto R$" + moto.calcularFrete(80).toFixed(2));
+// cliente escolhe o restaurante (Abstract Factory)
+const pizzaria: RestauranteFactory = new PizzariaFactory();
+const japones: RestauranteFactory = new JaponesFactory();
 
-const carro = new LogisticaCarro();
-registro.registrar("Sushi R$120 - frete carro R$" + carro.calcularFrete(120).toFixed(2));
+// monta o pedido (Builder) e escolhe a entrega (Factory Method)
+const pedido1 = new PedidoBuilder()
+  .paraCliente("Ana")
+  .adicionarItem(pizzaria.criarPrato())
+  .adicionarItem(pizzaria.criarBebida())
+  .comEntrega(new LogisticaMoto())
+  .comObservacao("sem cebola")
+  .build();
 
-const bicicleta = new LogisticaBicicleta();
-registro.registrar("Hamburguer R$40 - frete bicicleta R$" + bicicleta.calcularFrete(40).toFixed(2));
+const pedido2 = new PedidoBuilder()
+  .paraCliente("Bruno")
+  .adicionarItem(japones.criarPrato())
+  .adicionarItem(japones.criarBebida())
+  .adicionarItem(japones.criarSobremesa())
+  .comEntrega(new LogisticaCarro())
+  .build();
+
+// pedido é registrado (Singleton)
+registro.registrar(pedido1.resumo());
+registro.registrar(pedido2.resumo());
 
 console.log(registro.listar());
 
