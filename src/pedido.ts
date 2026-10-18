@@ -15,6 +15,10 @@ export class Pedido implements Prototype<Pedido> {
   entrega!: LogisticaEntrega;
   observacao = "";
 
+  adicionarItem(item: Item): void {
+    this.itens.push(item);
+  }
+
   subtotal(): number {
     return this.itens.reduce((soma, item) => soma + item.preco(), 0);
   }

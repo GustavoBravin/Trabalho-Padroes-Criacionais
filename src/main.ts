@@ -30,7 +30,16 @@ const pedido2 = new PedidoBuilder()
 registro.registrar(pedido1.resumo());
 registro.registrar(pedido2.resumo());
 
+// cliente repete o pedido (Prototype) e adiciona uma sobremesa só no novo
+const pedido3 = pedido1.clonar();
+pedido3.adicionarItem(pizzaria.criarSobremesa());
+registro.registrar(pedido3.resumo());
+
 console.log(registro.listar());
+
+// prova do Prototype: o clone é outro objeto e o original não mudou
+console.log("Clone é outro pedido?", pedido3 !== pedido1);
+console.log("Original continua igual:", pedido1.resumo());
 
 // prova do Singleton: pegando de novo, é o mesmo registro
 console.log("Mesma instância?", RegistroPedidos.getInstancia() === registro);
