@@ -3,8 +3,13 @@ import { LogisticaEntrega } from "./entrega";
 
 export type Item = Prato | Bebida | Sobremesa;
 
+// ===== Prototype =====
+export interface Prototype<T> {
+  clonar(): T;
+}
+
 // ===== Produto (o objeto que o Builder monta) =====
-export class Pedido {
+export class Pedido implements Prototype<Pedido> {
   cliente = "";
   itens: Item[] = [];
   entrega!: LogisticaEntrega;
@@ -29,6 +34,16 @@ export class Pedido {
       texto += " (obs: " + this.observacao + ")";
     }
     return texto;
+  }
+
+  // cria um pedido novo copiando este (usado para repetir pedido)
+  clonar(): Pedido {
+    const copia = new Pedido();
+    copia.cliente = this.cliente;
+    copia.itens = [...this.itens]; // lista nova, para não mexer no original
+    copia.entrega = this.entrega;
+    copia.observacao = this.observacao;
+    return copia;
   }
 }
 
