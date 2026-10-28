@@ -2,6 +2,7 @@ import { LogisticaMoto, LogisticaCarro } from "./entrega";
 import { RegistroPedidos } from "./RegistroPedidos";
 import { PizzariaFactory, JaponesFactory, RestauranteFactory } from "./restaurante";
 import { PedidoBuilder } from "./pedido";
+import { PedidoFacade } from "./facade";
 
 const registro = RegistroPedidos.getInstancia();
 
@@ -43,3 +44,17 @@ console.log("Original continua igual:", pedido1.resumo());
 
 // prova do Singleton: pegando de novo, é o mesmo registro
 console.log("Mesma instância?", RegistroPedidos.getInstancia() === registro);
+
+// ===== usando o Facade: o mesmo fluxo com uma chamada só =====
+const delivery = new PedidoFacade();
+
+const pedido4 = delivery.fazerPedido("Carla", "japones", "bicicleta", "sem wasabi");
+delivery.repetirPedido(pedido4);
+
+try {
+  delivery.fazerPedido("Diego", "churrascaria", "moto");
+} catch (e) {
+  console.log("erro:", (e as Error).message);
+}
+
+console.log(delivery.relatorio());
